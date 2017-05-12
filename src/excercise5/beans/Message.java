@@ -7,6 +7,8 @@ public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int id;
+	private int departmentId;
+	private int branchId;
 	private int userId;
 	private String subject;
 	private String body;
@@ -21,7 +23,20 @@ public class Message implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+	public int getDepartmentId() {
+		return departmentId;
+	}
+
+	public void setDepartmentId(int departmentId) {
+		this.departmentId = departmentId;
+	}
+	public int getBranchId() {
+		return branchId;
+	}
+
+	public void setBranchId(int branchId) {
+		this.branchId = branchId;
+	}
 	public int getUserId() {
 		return userId;
 	}

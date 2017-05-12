@@ -1,3 +1,4 @@
+//投稿画面で投稿したものをDBに保存する
 package excercise5.dao;
 
 import static excercise5.utils.CloseableUtil.*;

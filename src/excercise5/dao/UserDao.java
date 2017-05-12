@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import excercise5.beans.User;
 import excercise5.exception.NoRowsUpdatedRuntimeException;
 import excercise5.exception.SQLRuntimeException;
@@ -21,11 +23,12 @@ public class UserDao {
 
 		PreparedStatement ps = null;
 		try {
-			String sql = "SELECT * FROM users WHERE login_id = ? AND password = ?";
+			String sql = "SELECT * FROM users WHERE login_id = ? AND password = ? AND is_stopped = ?";
 
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, loginId);
 			ps.setString(2, password);
+			ps.setInt(3, 0);
 
 			ResultSet rs = ps.executeQuery();
 			List<User> userList = toUserList(rs);
@@ -117,15 +120,13 @@ public class UserDao {
 		try {
 			StringBuilder sql = new StringBuilder();
 			sql.append("UPDATE users SET");
-			sql.append("  loginId = ?");
+			sql.append("  login_id = ?");
 			sql.append(", password = ?");
 			sql.append(", name = ?");
-			sql.append(", branchId = ?");
-			sql.append(", departmentId = ?");
+			sql.append(", branch_id = ?");
+			sql.append(", department_id = ?");
 			sql.append(" WHERE");
 			sql.append(" id = ?");
-			//sql.append(" AND");
-			//sql.append(" update_date = ?");
 
 			ps = connection.prepareStatement(sql.toString());
 
@@ -135,7 +136,6 @@ public class UserDao {
 			ps.setString(4, user.getBranchId());
 			ps.setString(5, user.getDepartmentId());
 			ps.setInt(6, user.getId());
-			//ps.setTimestamp(7, new Timestamp(user.getUpdateDate().getTime()));
 
 			int count = ps.executeUpdate();
 			if (count == 0) {
@@ -246,6 +246,137 @@ public class UserDao {
 		} finally {
 			close(ps);
 		}
+	}
+	public void deletes(Connection connection, int deleteId) {
 
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("DELETE FROM users");
+			sql.append(" WHERE");
+			sql.append(" id = ?");
+
+			ps = connection.prepareStatement(sql.toString());
+			ps.setInt(1, deleteId);
+
+
+			int count = ps.executeUpdate();
+			if (count == 0) {
+				throw new NoRowsUpdatedRuntimeException();
+			}
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+
+	}
+	public void postDeletes(Connection connection, int deletePostId) {
+
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("DELETE FROM posts");
+			sql.append(" WHERE");
+			sql.append(" id = ?");
+
+			ps = connection.prepareStatement(sql.toString());
+			ps.setInt(1, deletePostId);
+
+
+			int count = ps.executeUpdate();
+			if (count == 0) {
+				throw new NoRowsUpdatedRuntimeException();
+			}
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+	public void commentDeletes(Connection connection, int deleteCommentId) {
+
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("DELETE FROM comments");
+			sql.append(" WHERE");
+			sql.append(" id = ?");
+
+			ps = connection.prepareStatement(sql.toString());
+			ps.setInt(1, deleteCommentId);
+
+
+			int count = ps.executeUpdate();
+			if (count == 0) {
+				throw new NoRowsUpdatedRuntimeException();
+			}
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+
+	public User getSettingsUser(Connection connection, int settingsId) {
+
+		PreparedStatement ps = null;
+		try {
+			String sql = "SELECT * FROM users WHERE id = ?";
+
+			ps = connection.prepareStatement(sql);
+			ps.setInt(1, settingsId);
+
+			ResultSet rs = ps.executeQuery();
+			List<User> userList = toUserList(rs);
+			if (userList.isEmpty() == true) {
+				return null;
+			} else {
+				return userList.get(0);
+			}
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+	public void settingsUpdate(Connection connection, User user) {
+
+		PreparedStatement ps = null;
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("UPDATE users SET");
+			sql.append("  login_Id = ?");
+			sql.append(", name = ?");
+			sql.append(", branch_id = ?");
+			sql.append(", department_id = ?");
+			if (StringUtils.isEmpty(user.getPassword()) != true) {
+				sql.append(", password = ?");
+			}
+			sql.append(" WHERE");
+			sql.append(" id = ?");
+
+			ps = connection.prepareStatement(sql.toString());
+
+			ps.setString(1, user.getLoginId());
+			ps.setString(2, user.getName());
+			ps.setString(3, user.getBranchId());
+			ps.setString(4, user.getDepartmentId());
+			if(StringUtils.isEmpty(user.getPassword())) {
+				ps.setInt(5, user.getId());
+			} else {
+				ps.setString(5, user.getPassword());
+				ps.setInt(6, user.getId());
+			}
+
+			int count = ps.executeUpdate();
+			if (count == 0) {
+				throw new NoRowsUpdatedRuntimeException();
+			}
+		} catch (SQLException e) {
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
 	}
 }

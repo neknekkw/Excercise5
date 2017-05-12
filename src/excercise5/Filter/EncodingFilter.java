@@ -42,7 +42,6 @@ public class EncodingFilter implements Filter {
 					+ ")を利用します。。");
 		}
 	}
-
 	@Override
 	public void destroy() {
 	}

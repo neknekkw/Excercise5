@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 
 import excercise5.beans.User;
+import excercise5.service.BranchService;
 import excercise5.service.UserService;
 
 @WebServlet(urlPatterns = { "/userRegistration" })
@@ -23,6 +24,8 @@ public class userRegistrationServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException {
 
+		List<User> branchName = new BranchService().getBranchName();
+		
 		request.getRequestDispatcher("userRegistration.jsp").forward(request, response);
 	}
 
@@ -34,7 +37,7 @@ public class userRegistrationServlet extends HttpServlet {
 
 		//セッションを取得する、セッションを開始する
 		HttpSession session = request.getSession();
-		
+
 		User user = new User();
 		user.setLoginId(request.getParameter("loginId"));
 		user.setPassword(request.getParameter("password"));
@@ -46,12 +49,12 @@ public class userRegistrationServlet extends HttpServlet {
 		if (isValid(request, messages) == true) {
 
 			//User型のuserの箱の中にそれぞれの値を格納していく。
-		
+
 			new UserService().register(user);
 
-			response.sendRedirect("top");
+			response.sendRedirect("userManagement");
 		} else {
-			
+
 			request.setAttribute("user", user);
 			session.setAttribute("errorMessages", messages);
 			request.getRequestDispatcher("/userRegistration.jsp").forward(request,response);
@@ -63,9 +66,17 @@ public class userRegistrationServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		String name = request.getParameter("name");
 		String checkPassword = request.getParameter("password");
+		int branchId = Integer.parseInt(request.getParameter("branchId"));
+		int departmentId = Integer.parseInt(request.getParameter("departmentId"));
 
 		if (StringUtils.isEmpty(loginId) == true) {
 			messages.add("ログインIDを入力してください");
+		}
+		if (!loginId.matches("^[0-9a-zA-Z]+$") || loginId.length() <= 6 || loginId.length() >= 20) {
+			messages.add("ログインIDは半角英数字6文字以上20文字以内で入力してください");
+		}
+		if (!password.matches("^[-_@+*;:#$%&A-Za-z0-9]+$") || password.length() <= 6 || password.length() >= 255) {
+			messages.add("パスワードは記号を含む全ての半角文字6文字から255文字以下で入力してください");
 		}
 		if (StringUtils.isEmpty(password) == true) {
 			messages.add("パスワードを入力してください");
@@ -73,8 +84,18 @@ public class userRegistrationServlet extends HttpServlet {
 		if (!password.equals(checkPassword)) {
 			messages.add("パスワードが一致しません");
 		}
+		if (name.length() >= 10) {
+			messages.add("名前は10文字以下で入力してください");
+		}
 		if (StringUtils.isEmpty(name) == true) {
 			messages.add("名前を入力してください");
+		}
+		if (branchId == 1 && departmentId >= 3 && departmentId <= 4) {
+			messages.add("支店長・支店社員を本社所属にはできません");
+		}
+
+		if (branchId >= 2 && departmentId <= 2) {
+			messages.add("本社社員を支店所属にはできません");
 		}
 		// TODO アカウントが既に利用されていないか、メールアドレスが既に登録されていないかなどの確認も必要
 		if (messages.size() == 0) {

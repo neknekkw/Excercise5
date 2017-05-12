@@ -23,26 +23,35 @@
 	<c:remove var="errorMessages" scope="session"/>
 </c:if>
 <form action="userRegistration" method="post"><br />
-	<label for="loginId">ログインID</label>
+	<label for="loginId">ログインID</label> (半角英数字6文字以上20文字以下)<br />
 	<input name="loginId" value="${user.loginId}" id="loginId"/><br />
 
-	<label for="password">パスワード</label>
+	<label for="password">パスワード</label> (記号含む半角文字6文字以上255文字以下)<br />
 	<input name="password" type="password" id="account"/><br />
 
-	<label for="checkPassword">確認用パスワード</label>
+	<label for="checkPassword">確認用パスワード</label><br />
 	<input name="checkPassword" type="password" id="checkPassword"/><br />
 
-	<label for="name">名前</label>
+	<label for="name">名前</label>(10文字以下)<br />
 	<input name="name" value="${user.name}" id="password"/> <br />
+	支店：
+		<select name="branchId">
+		<option value="1">本社</option>
+		<option value="2">支店A</option>
+		<option value="3">支店B</option>
+		<option value="4">支店C</option>
+	</select><br />
+	部署・役職：
+		<select name="departmentId">
+		<option value="1">総務人事担当者</option>
+		<option value="2">情報管理担当者</option>
+		<option value="3">支店長</option>
+		<option value="4">社員</option>
+	</select><br />
 
-	<label for="branchId">支店番号</label>
-	<input name="branchId" value="${user.branchId}" id="email"/> <br />
 
-	<label for="departmentId">部署・役職番号</label>
-	<input name="departmentId" value="${user.branchId}"><br />
-
-	<input type="submit" value="登録" /> <br />
-	<a href="userManagement">戻る</a>
+		<input type="submit" value="登録" /> <br />
+		<a href="userManagement">戻る</a>
 </form>
 <div class="copyright">Copyright(c)Watanabe Kenta</div>
 </div>

@@ -16,8 +16,9 @@ public class User implements Serializable {
 	private String departmentId;
 	private Date insertDate;
 	private int isStopped;
-	
-	
+
+
+
 	public int getId() {
 		return id;
 	}
@@ -25,8 +26,8 @@ public class User implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	
+
+
 	public String getLoginId() {
 		return loginId;
 	}

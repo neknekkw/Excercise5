@@ -13,6 +13,17 @@
 <body>
 <div class="main-contents">
 
+<c:if test="${ not empty errorMessage }">
+	<div class="errorMessage">
+		<ul>
+			<c:forEach items="${errorMessage}" var="message">
+				<li><c:out value="${message}" />
+			</c:forEach>
+		</ul>
+	</div>
+	<c:remove var="errorMessages" scope="session"/>
+</c:if>
+
 <c:if test="${ not empty errorMessages }">
 	<div class="errorMessages">
 		<ul>
@@ -25,14 +36,13 @@
 </c:if>
 
 <form action="login" method="post"><br />
-	<label for="loginId">ログインID</label>
+	<label for="loginId">ログインID</label> (半角英数字で6文字以上20文字以下)<br />
 	<input name="loginId" id="loginId"/> <br />
 
-	<label for="password">パスワード</label>
+	<label for="password">パスワード</label> (記号含む半角文字で6文字以上255文字以下)<br />
 	<input name="password" type="password" id="password"/> <br />
 
 	<input type="submit" value="ログイン" /> <br />
-	<a href="login.jsp">戻る</a>
 </form>
 <div class="copyright">Copyright(c)Kenta Watanabe</div>
 </div>

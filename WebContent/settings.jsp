@@ -7,7 +7,7 @@
 <h1>ユーザー編集</h1>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>${loginUser.account}の設定</title>
+	<title>${loginUser.name}の設定</title>
 	<link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -24,28 +24,37 @@
 	<c:remove var="errorMessages" scope="session"/>
 </c:if>
 
-<form action="settings" method="post" enctype="multipart/form-data"><br />
-	<label for="loginId">ログインID</label>
-	<input name="loginId" value="${editUser.loginId}" id="loginId"/><br />
+<form action="settings" method="post"><br />
+	<label for="loginId">ログインID</label> (半角英数字6文字以上20文字以下)
+	<input name="loginId" value="${settingsUser.loginId}" id="loginId"/><br />
 
-	<label for="password">パスワード</label>
-	<input name="password" value="${editUser.password}" /><br />
+	<label for="password">パスワード</label> (記号含む半角文字6文字以上255文字以下)
+	<input name="password" type="password"/><br />
 
 	<label for="checkPassword">確認用パスワード</label>
-	<input name="checkPassword" type="password" id="CheckPassword"/> <br />
+	<input name="checkPassword" type="password"/> <br />
 
-	<label for="name">名前</label>
-	<input name="name" value="${editUser.name}" id="name"/> <br />
+	<label for="name">名前</label> (10文字以下)
+	<input name="name" value="${settingsUser.name}" id="name"/> <br />
 
-	<label for="branchId">支店番号</label>
-	<input name="branchId" value="${editUser.branchId}" id="branchId" /><br />
+	支店：
+		<select name="branchId">
+		<option value="1">本社</option>
+		<option value="2">支店A</option>
+		<option value="3">支店B</option>
+		<option value="4">支店C</option>
+	</select><br />
+	部署・役職：
+		<select name="departmentId">
+		<option value="1">総務人事担当者</option>
+		<option value="2">情報管理担当者</option>
+		<option value="3">支店長</option>
+		<option value="4">社員</option>
+	</select><br />
 
-	<label for="departmentId">部署・役割番号</label>
-	<input name="departmentId" value="${editUser.departmentId}" id="departmentId" /><br />
-
-	<input type="submit" value="登録" /> <br />
-	<a href="./">戻る</a>
-</form>
+	 <input type="hidden" name="settingsId" value="${settingsUser.id}"><input type="submit" value="登録" /> <br />
+	 <a href="userManagement">戻る</a>
+		</form>
 <div class="copyright">Copyright(c)Kenta Watanabe</div>
 </div>
 </body>

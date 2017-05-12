@@ -17,7 +17,7 @@
 				href="logout">ログアウト</a>
 		</div>
 
-		<table border="1">
+		<table border="1" cellspacing="0" cellpadding="0">
 			<tr>
 				<td>ログインID</td>
 				<td>名前</td>
@@ -25,15 +25,47 @@
 				<td>部署・役割</td>
 				<td>編集</td>
 				<td>状態変更</td>
+				<td>削除</td>
 			</tr>
 
 			<c:forEach items="${ users }" var="user">
 				<tr>
 					<td><c:out value="${user.loginId}" /></td>
 					<td><c:out value="${user.name}" /></td>
-					<td><c:out value="${user.branchId}"/></td>
-					<td><c:out value="${user.departmentId}"/></td>
-					<td><button type="button" onclick="location.href='settings'">編集</button></td>
+					<td>
+						<c:if test = "${user.branchId == 1}">
+						<c:out value="本社" />
+						</c:if>
+						<c:if test = "${user.branchId == 2}">
+						<c:out value="支店A" />
+						</c:if>
+						<c:if test = "${user.branchId == 3}">
+						<c:out value="支店B" />
+						</c:if>
+						<c:if test = "${user.branchId == 4}">
+						<c:out value="支店C" />
+						</c:if>
+					</td>
+					<td>
+					<c:if test = "${user.departmentId == 1}">
+					<c:out value="総務部人事" />
+					</c:if>
+					<c:if test = "${user.departmentId == 2}">
+					<c:out value="情報管理部" />
+					</c:if>
+					<c:if test = "${user.departmentId == 3}">
+					<c:out value="支店長" />
+					</c:if>
+					<c:if test = "${user.departmentId == 4}">
+					<c:out value="社員" />
+					</c:if>
+					</td>
+					<td>
+						<form method="get" action="settings">
+							<input type="hidden" name="settings" value="${user.id}"><input
+								type="submit" name="settingsButton" value="編集">
+						</form>
+					</td>
 
 					<c:if test="${user.isStopped == 0}">
 						<td>
@@ -55,6 +87,13 @@
 							</form>
 						</td>
 					</c:if>
+					<td>
+						<form method="post" action="deleteId">
+							<input type="hidden" name="deleteId" value="${user.id}"><input
+								type="submit" onClick="return confirm('本当に削除しますか')"
+								name="delete" value="削除">
+						</form>
+					</td>
 				</tr>
 			</c:forEach>
 		</table>

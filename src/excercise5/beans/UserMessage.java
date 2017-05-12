@@ -15,6 +15,8 @@ public class UserMessage implements Serializable {
 	private String body;
 	private String category;
 	private Date insertDate;
+	private String categories;
+	private Date insertOldestDate;
 
 	public int getId() {
 		return id;
@@ -84,5 +86,18 @@ public class UserMessage implements Serializable {
 	public void setInsertDate(Date insertDate) {
 		this.insertDate = insertDate;
 	}
+	public String getCategories() {
+		return categories;
+	}
 
+	public void setCategories(String categories) {
+		this.categories = categories;
+	}
+	public Date getInsertOldestDate() {
+		return insertOldestDate;
+	}
+
+	public void setInsertOldestDate(Date insertOldestDate) {
+		this.insertOldestDate = insertOldestDate;
+	}
 }
