@@ -41,7 +41,6 @@ public class MessageService {
 
 		Connection connection = null;
 		try {
-			System.out.println("w" + end);
 			connection = getConnection();
 			UserMessageDao messageDao = new UserMessageDao();
 			List<UserMessage> ret = messageDao.getUserMessages(connection, LIMIT_NUM, category, start, end);

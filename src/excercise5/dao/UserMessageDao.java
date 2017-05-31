@@ -23,7 +23,6 @@ public class UserMessageDao {
 
 		PreparedStatement ps = null;
 		try {
-			System.out.println("k" + end);
 			StringBuilder sql = new StringBuilder();
 			sql.append("SELECT * FROM users_posts ");
 			sql.append("WHERE ? <= insert_date ");
@@ -38,7 +37,6 @@ public class UserMessageDao {
 				}
 
 			ps = connection.prepareStatement(sql.toString());
-			System.out.println(ps);
 			ps.setString(1, start);
 			ps.setString(2, end);
 				if (StringUtils.isEmpty(category)) {

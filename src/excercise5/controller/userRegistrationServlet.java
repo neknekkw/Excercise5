@@ -13,7 +13,10 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 
 import excercise5.beans.User;
+import excercise5.beans.UserBranch;
+import excercise5.beans.UserDepartment;
 import excercise5.service.BranchService;
+import excercise5.service.DepartmentService;
 import excercise5.service.UserService;
 
 @WebServlet(urlPatterns = { "/userRegistration" })
@@ -24,8 +27,13 @@ public class userRegistrationServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException {
 
-		List<User> branchName = new BranchService().getBranchName();
-		
+		HttpSession session = request.getSession();
+		List<UserBranch> branchName = new BranchService().getBranchName();
+		session.setAttribute("branchNames", branchName);
+
+		List<UserDepartment> departmentName = new DepartmentService().getDepartmentName();
+		session.setAttribute("departmentNames", departmentName);
+
 		request.getRequestDispatcher("userRegistration.jsp").forward(request, response);
 	}
 
@@ -52,8 +60,11 @@ public class userRegistrationServlet extends HttpServlet {
 
 			new UserService().register(user);
 
+			session.removeAttribute("departmentNames");
+			session.removeAttribute("branchNames");
 			response.sendRedirect("userManagement");
 		} else {
+
 
 			request.setAttribute("user", user);
 			session.setAttribute("errorMessages", messages);
@@ -65,18 +76,24 @@ public class userRegistrationServlet extends HttpServlet {
 		String loginId = request.getParameter("loginId");
 		String password = request.getParameter("password");
 		String name = request.getParameter("name");
-		String checkPassword = request.getParameter("password");
+		String checkPassword = request.getParameter("checkPassword");
 		int branchId = Integer.parseInt(request.getParameter("branchId"));
 		int departmentId = Integer.parseInt(request.getParameter("departmentId"));
 
 		if (StringUtils.isEmpty(loginId) == true) {
 			messages.add("ログインIDを入力してください");
 		}
-		if (!loginId.matches("^[0-9a-zA-Z]+$") || loginId.length() <= 6 || loginId.length() >= 20) {
-			messages.add("ログインIDは半角英数字6文字以上20文字以内で入力してください");
+		if (!loginId.matches("^[0-9a-zA-Z]+$") || loginId.length() < 6 || loginId.length() > 20) {
+			messages.add("ログインIDは半角英数字6文字以上20文字以下で入力してください");
 		}
-		if (!password.matches("^[-_@+*;:#$%&A-Za-z0-9]+$") || password.length() <= 6 || password.length() >= 255) {
-			messages.add("パスワードは記号を含む全ての半角文字6文字から255文字以下で入力してください");
+		User settingsUser = new UserService().getCheckUser(loginId);
+
+		if (settingsUser != null) {
+			messages.add("ログインIDが重複しています。他のユーザーIDを入力してください");
+		}
+
+		if (!password.matches("^[-_@+*;:#$%&A-Za-z0-9]+$") || password.length() < 6 || password.length() > 255) {
+			messages.add("パスワードは記号を含む全ての半角英数字6文字以上255文字以下で入力してください");
 		}
 		if (StringUtils.isEmpty(password) == true) {
 			messages.add("パスワードを入力してください");
@@ -84,7 +101,7 @@ public class userRegistrationServlet extends HttpServlet {
 		if (!password.equals(checkPassword)) {
 			messages.add("パスワードが一致しません");
 		}
-		if (name.length() >= 10) {
+		if (name.length() > 10) {
 			messages.add("名前は10文字以下で入力してください");
 		}
 		if (StringUtils.isEmpty(name) == true) {
